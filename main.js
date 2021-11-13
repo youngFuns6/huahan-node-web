@@ -1,22 +1,36 @@
 const mysql = require('mysql')
-let connection = mysql.createConnection({
+
+const config = {
   host: 'localhost',
   user: 'root',
   password: 'qunxiang2020',
   port: '3306',
   database: 'web'
-});
+}
 
-connection.connect();
+let connection = mysql.createConnection(config);
+
+
 
 exports.queryAll = function(){
-  connection.query('SELECT * FROM web', (err, data) => {
+  connection = mysql.createConnection(config);
+  connection.connect();
+  connection.query('SELECT * FROM web', (err, result) => {
     if(err){
       console.log(err.message)
       return
     }
-    console.log(data)
+    return result
   })
+  connection.end()
 }
 
-connection.end()
+exports.addInfo = function(obj){
+  connection = mysql.createConnection(config);
+  connection.connect();
+  connection.query('INSERT INTO web SET ?', [obj], (err, result) => {
+    if(err) throw err;
+    return result
+  })
+  connection.end()
+}
