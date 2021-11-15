@@ -8,7 +8,8 @@ const tutorials = require('./controllers/controllers')
 
 router.get('/', tutorials.findAll)
 
-router.post('/add', tutorials.create)
+router.post('/information', tutorials.create)
 
+router.put('/information', tutorials.update)
 
 module.exports = router

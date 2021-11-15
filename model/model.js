@@ -23,7 +23,7 @@ Object.assign(Tutorial.prototype, {
   },
   // 获取
   getAll(tutorial, result) {
-    if(tutorial.id !== 'undefined') return this.findById(tutorial.id, result)
+    if(tutorial.id !== undefined) return this.findById(tutorial.id, result)
     let m = (tutorial.page - 1) * tutorial.pageSize || 0
     let n = tutorial.pageSize || 10
     sql.query(`SELECT * FROM web limit ${m},${n}`, (err, res) => {
@@ -39,7 +39,7 @@ Object.assign(Tutorial.prototype, {
   // 根据id获取
   findById(id, result){
     sql.query(`SELECT * FROM web WHERE id = ${id}`, (err, res) => {
-      console.log(res)
+      // console.log(res)
       if(err){
         console.log("error: ", err)
         result(err, null)
@@ -51,6 +51,23 @@ Object.assign(Tutorial.prototype, {
         return
       }
       result({ kind: "not_found" }, null)
+    })
+  },
+  // 修改
+  updateById(newTutorial, result){
+    sql.query(`UPDATE web SET ?`, newTutorial, (err, res) => {
+      if(err){
+        console.log("error: ", err)
+        result(err, null)
+        return
+      }
+      if (res.affectedRows == 0) {
+        // not found Tutorial with the id
+        result({ kind: "not_found" }, null);
+        return;
+      }
+      console.log("updated tutorial: ", {id: newTutorial.id, ...newTutorial})
+      result(null, {id: newTutorial.id, ...newTutorial})
     })
   }
 })
