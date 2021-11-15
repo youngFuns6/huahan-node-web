@@ -1,20 +1,14 @@
 const express = require('express')
 const router = express.Router()
-const db = require('./main')
+const tutorials = require('./controllers/controllers')
 
 
 
 
 
-router.get('/', (req, res) => {
-  const data = db.queryAll()
-  res.send('hello')
-  console.log('999')
-})
+router.get('/', tutorials.findAll)
 
-router.post('/add', (req, res) => {
-  console.log('000')
-  db.addInfo({id: 0, type: 2, title: '666', content: '999'})
-})
+router.post('/add', tutorials.create)
+
 
 module.exports = router
