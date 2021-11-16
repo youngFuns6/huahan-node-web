@@ -1,4 +1,4 @@
-const Tutorial = require('../model/model')
+const Tutorial = require('../model/condition')
 const tutorial = new Tutorial()
 
 exports.create = (req, res) => {
@@ -18,7 +18,6 @@ exports.create = (req, res) => {
       })
     }else {
       res.json({
-        code: 200,
         message: 'success',
         data
       })
@@ -38,16 +37,14 @@ exports.findAll = (req, res) => {
       })
     }else {
       res.json({
-        code: 200,
         message: 'success',
-        data
+        data: data.reverse()
       })
     }
   })
 }
 
 exports.update = (req, res) => {
-  // console.log(req.)
   if(req.body.id === undefined){
     res.status(400).json({message: '参数错误'})
   }else {
@@ -58,12 +55,25 @@ exports.update = (req, res) => {
         })
       }else {
         res.json({
-          code: 200,
           message: 'success',
           data
         })
       }
     })
   }
-  
+}
+
+exports.delete = (req, res) => {
+  tutorial.deleteById(req.body.id, (err, data) => {
+    if(err){
+      res.status(500).json({
+        message: err.message || '系统错误'
+      })
+    }else {
+      res.json({
+        message: 'success',
+        data
+      })
+    }
+  })
 }
