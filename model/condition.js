@@ -23,6 +23,7 @@ Object.assign(Tutorial.prototype, {
   },
   // 获取
   getAll(tutorial, result) {
+    console.log(tutorial)
     if (tutorial.id !== undefined) return this.findById(tutorial.id, result)
     let m = (tutorial.page - 1) * tutorial.pageSize || 0
     let n = tutorial.pageSize || 10
@@ -43,7 +44,7 @@ Object.assign(Tutorial.prototype, {
   // 根据id获取
   findById(id, result) {
     sql.query(`SELECT * FROM web_condition WHERE id = ${id}`, (err, res) => {
-      // console.log(res)
+      console.log(res)
       if (err) {
         console.log("error: ", err)
         result(err, null)
@@ -51,7 +52,7 @@ Object.assign(Tutorial.prototype, {
       }
       if (res.length) {
         console.log("found web_condition: ", res[0])
-        result(null, res[0])
+        result(null, {res: res[0]})
         return
       }
       result({ kind: "not_found" }, null)

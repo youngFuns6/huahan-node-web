@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const condition = require('./controllers/controllers_con')
 const information = require('./controllers/controllers_inf')
-
+const login = require('./controllers/controllers_usr')
 
 
 
@@ -20,6 +20,8 @@ router.get('/information', information.findInfo)
 router.post('/information', information.create)
 
 router.put('/information', information.update)
+
+router.post('/login', login.findUsr)
 
 module.exports = router
 // CREATE TABLE web_condition(
