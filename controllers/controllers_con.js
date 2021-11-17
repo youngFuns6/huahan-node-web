@@ -38,7 +38,8 @@ exports.findAll = (req, res) => {
     }else {
       res.json({
         message: 'success',
-        data: data.reverse()
+        data: data.res,
+        total: data.total
       })
     }
   })

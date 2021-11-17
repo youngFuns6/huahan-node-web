@@ -26,14 +26,18 @@ Object.assign(Tutorial.prototype, {
     if (tutorial.id !== undefined) return this.findById(tutorial.id, result)
     let m = (tutorial.page - 1) * tutorial.pageSize || 0
     let n = tutorial.pageSize || 10
-    sql.query(`SELECT * FROM web_condition limit ${m},${n}`, (err, res) => {
+    sql.query(`SELECT * FROM web_condition WHERE type=${tutorial.type} ORDER BY id DESC limit ${m},${n}; SELECT FOUND_ROWS() FROM web_condition WHERE type=${tutorial.type}`, (err, res) => {
       if (err) {
         console.log("error: ", err)
         result(err, null)
         return
       }
       console.log('web_condition', res)
-      result(null, res)
+      // sql.query(`SELECT FOUND_ROWS() FROM web_condition WHERE type=${tutorial.type}`, (errRows, rows) => {
+      //   // console.log(rows.length)
+        result(null, {res: res[0], total: res[1].length})
+      // })
+      // result(null, {list: res, total})
     })
   },
   // 根据id获取
