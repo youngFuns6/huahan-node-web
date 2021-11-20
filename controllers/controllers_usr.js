@@ -7,14 +7,16 @@ const t_secret = require('../config/token.config')
 const tutorial = new Tutorial()
 
 exports.findUsr = (req, res) => {
-  console.log(req.body)
+  // console.log(req.body)
   if (!req.body.usrname || !req.body.password) {
     res.status(400).json({
       code: -1002,
       message: '参数错误'
     })
+    return
   }
   tutorial.getUser(req.body, (err, data) => {
+    // console.log(data)
     if (err) {
       res.status(500).json({
         code: -1003,
@@ -36,26 +38,30 @@ exports.findUsr = (req, res) => {
     //   message: 'success',
     //   token
     // })
-    // tutorial.setToken(token, req.body, (err, data) => {
-    //   if (err) {
-    //     res.status(500).json({
-    //       code: -1003,
-    //       message: err.message || '系统错误'
-    //     })
-    //   } else {
-    //     res.json({
-    //       code: 200,
-    //       message: 'success',
-    //       data
-    //     })
-    //   }
-    // })
-    res.json({
-      code: 200,
-      message: 'success',
-      data,
-      token
+    tutorial.setToken(token, req.body, (err, token) => {
+      if (err) {
+        res.status(500).json({
+          code: -1003,
+          message: err.message || '系统错误'
+        })
+      } else {
+        res.json({
+          code: 200,
+          message: 'success',
+          data: {
+            usrname: req.body.usrname,
+            password: req.body.password,
+            token
+          }
+        })
+      }
     })
+    // res.json({
+    //   code: 200,
+    //   message: 'success',
+    //   data,
+    //   token
+    // })
   })
   // res.send('ok')
 }
