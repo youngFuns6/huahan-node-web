@@ -42,7 +42,7 @@ Object.assign(Tutorial.prototype, {
       console.log("web_usr_token: ", res[0])
       result(null, res[0])
     })
-  }
+  },
 })
 
 module.exports = Tutorial

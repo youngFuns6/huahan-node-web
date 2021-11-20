@@ -23,13 +23,6 @@ router.put('/information', information.update)
 
 router.post('/login', login.findUsr)
 
+router.post('/qntoken', login.genQnToken)
+
 module.exports = router
-// CREATE TABLE web_condition(
-// id INT NOT NULL AUTO_INCREMENT,
-// title VARCHAR(100) NOT NULL,
-// content MEDIUMTEXT,
-// banner TEXT,
-// type INT NOT NULL,
-// created DATETIME DEFAULT CURRENT_TIMESTAMP,
-// PRIMARY KEY ( id )
-// );

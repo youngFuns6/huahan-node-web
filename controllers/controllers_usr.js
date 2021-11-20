@@ -56,12 +56,24 @@ exports.findUsr = (req, res) => {
         })
       }
     })
-    // res.json({
-    //   code: 200,
-    //   message: 'success',
-    //   data,
-    //   token
-    // })
   })
-  // res.send('ok')
+}
+
+exports.genQnToken = (req, res) => {
+  const qiniu = require("qiniu");
+//客户端调用接口，生成token
+let accessKey = 'hjdeYdfssw882iHUI92390HIhleiwaha7892ihg';
+let secretKey = 'jaiolh80HJHu9ww79ewjkhhfdsan8329hailhu';
+let mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
+let options = {
+  scope: 'images' //七牛资源目录
+};
+let putPolicy = new qiniu.rs.PutPolicy(options);
+let uploadToken = putPolicy.uploadToken(mac);
+console.log(uploadToken);
+res.json({
+  code: 200,
+  message: 'success',
+  data: uploadToken
+})
 }
