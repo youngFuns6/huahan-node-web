@@ -6,8 +6,9 @@ const t_secret = require('../config/token.config')
 
 const tutorial = new Tutorial()
 
-exports.findUsr = (req, res) => {
-  // console.log(req.body)
+exports.findUsr = (str, req, res) => {
+  console.log('000: ', req)
+  
   if (!req.body.usrname || !req.body.password) {
     res.status(400).json({
       code: -1002,
@@ -16,18 +17,21 @@ exports.findUsr = (req, res) => {
     return
   }
   tutorial.getUser(req.body, (err, data) => {
-    // console.log(data)
+    
     if (err) {
       res.status(500).json({
         code: -1003,
         message: err.message || '系统错误'
       })
+      return
     }
     if (data === undefined || req.body.password !== data.password) {
+      // console.log(data.password)
       res.status(400).json({
         code: -1005,
         message: '用户名或密码错误'
       })
+      // res.send('999')
       return
     }
     let payload = { usrname: req.body.usrname, password: req.body.password };

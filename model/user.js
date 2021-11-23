@@ -6,7 +6,7 @@ class Tutorial {
 
 Object.assign(Tutorial.prototype, {
   getUser(tutorial, result) {
-    sql.query(`SELECT * FROM web_user WHERE usrname='${tutorial.usrname}'`, (err, res) => {
+    sql.query(`SELECT * FROM web_usr WHERE usrname='${tutorial.usrname}'`, (err, res) => {
       if (err) {
         console.log("error: ", err)
         result(err, null)
@@ -22,7 +22,7 @@ Object.assign(Tutorial.prototype, {
     })
   },
   setToken(token, tutorial, result) {
-    sql.query(`UPDATE web_user SET token='${token}' WHERE usrname='${tutorial.usrname}'`, (err, res) => {
+    sql.query(`UPDATE web_usr SET token='${token}' WHERE usrname='${tutorial.usrname}'`, (err, res) => {
       if (err) {
         console.log("error: ", err)
         result(err, null)
@@ -33,7 +33,7 @@ Object.assign(Tutorial.prototype, {
     })
   },
   getToken(token, result) {
-    sql.query(`SELECT * FROM web_user WHERE token='${token}'`, (err, res) => {
+    sql.query(`SELECT * FROM web_usr WHERE token='${token}'`, (err, res) => {
       if (err) {
         console.log("error: ", err)
         result(err, null)

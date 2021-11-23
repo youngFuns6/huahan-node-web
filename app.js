@@ -14,20 +14,34 @@ app.use((req, res, next) => {
     res.set({
       'Access-Control-Allow-Credentials': true,
       'Access-Control-Allow-Origin': req.headers.origin || '*',
-      'Access-Control-Allow-Headers': 'X-Requested-With,Content-Type',
+      'Access-Control-Allow-Headers': 'X-Requested-With,Content-Type,Authorization',
       'Access-Control-Allow-Methods': 'PUT,POST,GET,DELETE,OPTIONS',
+      // "Access-Control-Request-Headers": "Origin, X-Requested-With, content-Type, Accept, Authorization",
       'Content-Type': 'application/json; charset=utf-8',
     })
   }
   req.method === 'OPTIONS' ? res.status(204).end() : next()
 })
 
-app.use('/api', (req, res, next) => {
-  // console.log(req.url)
+app.use((req, res, next) => {
+  // console.log('req: ', req)
+  let str = ''
+  req.on('data', chunk => {
+    str += chunk
+  })
+  req.on('end', () => {
+    // console.log('str: ', str)
+    // req = str
+    next(str)
+  })
+})
+
+app.use('/api', (str, req, res, next) => {
+  // console.log('str', str)
   // console.log(req.headers.authorization)
   // console.log(jwt.verify(token, t_secret.TOKEN_SECRET))
   if (req.url === '/login' || req.method === 'GET') {
-    next()
+    next(str)
     return
   }
   let token = req.headers.authorization
@@ -49,12 +63,12 @@ app.use('/api', (req, res, next) => {
       })
       return
     }
-    next()
+    next(str)
   })
 })
 
-app.use(express.urlencoded({ extended: true }));
 
+app.use(express.urlencoded({ extended: true }));
 
 
 app.use('/api', router)
