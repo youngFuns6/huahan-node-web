@@ -1,5 +1,6 @@
-const Tutorial = require('../model/condition')
+const Tutorial = require('../../model/condition/condition_pr')
 const tutorial = new Tutorial()
+
 
 exports.create = (req, res) => {
   // console.log(req)

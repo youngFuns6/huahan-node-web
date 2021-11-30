@@ -5,6 +5,8 @@ const router = require('./router')
 
 const Tutorial = require('./model/user')
 
+const bodyParser = require("body-parser")
+
 const tutorial = new Tutorial()
 
 const app = express()
@@ -23,25 +25,25 @@ app.use((req, res, next) => {
   req.method === 'OPTIONS' ? res.status(204).end() : next()
 })
 
-app.use((req, res, next) => {
-  // console.log('req: ', req)
-  let str = ''
-  req.on('data', chunk => {
-    str += chunk
-  })
-  req.on('end', () => {
-    // console.log('str: ', str)
-    // req = str
-    next(str)
-  })
-})
+// app.use((req, res, next) => {
+//   // console.log('req: ', req)
+//   let str = ''
+//   req.on('data', chunk => {
+//     str += chunk
+//   })
+//   req.on('end', () => {
+//     // console.log('str: ', str)
+//     // req = str
+//     next(str)
+//   })
+// })
 
-app.use('/api', (str, req, res, next) => {
+app.use('/api', (req, res, next) => {
   // console.log('str', str)
   // console.log(req.headers.authorization)
   // console.log(jwt.verify(token, t_secret.TOKEN_SECRET))
   if (req.url === '/login' || req.method === 'GET') {
-    next(str)
+    next()
     return
   }
   let token = req.headers.authorization
@@ -58,16 +60,16 @@ app.use('/api', (str, req, res, next) => {
     }
     if (data === undefined) {
       res.status(401).json({
-        code: -1005,
+        code: -3006,
         message: '登录已失效'
       })
       return
     }
-    next(str)
+    next()
   })
 })
 
-
+app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true }));
 
 

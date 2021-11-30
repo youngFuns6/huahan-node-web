@@ -6,8 +6,8 @@ const t_secret = require('../config/token.config')
 
 const tutorial = new Tutorial()
 
-exports.findUsr = (str, req, res) => {
-  console.log('000: ', req)
+exports.findUsr = (req, res) => {
+  // console.log('000: ', req.body)
   
   if (!req.body.usrname || !req.body.password) {
     res.status(400).json({
@@ -66,11 +66,11 @@ exports.findUsr = (str, req, res) => {
 exports.genQnToken = (req, res) => {
   const qiniu = require("qiniu");
 //客户端调用接口，生成token
-let accessKey = 'hjdeYdfssw882iHUI92390HIhleiwaha7892ihg';
-let secretKey = 'jaiolh80HJHu9ww79ewjkhhfdsan8329hailhu';
+let accessKey = 'WI4iwFyCoa-F0Mv-XW1Yoo2F-nc_joq-EO_Hvzgv';
+let secretKey = '39syvi2jpeVMdJ9TCnGmK-_OCHNWSWggQqYCwETg';
 let mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
 let options = {
-  scope: 'images' //七牛资源目录
+  scope: 'qunxiang-guanwang', //七牛资源目录
 };
 let putPolicy = new qiniu.rs.PutPolicy(options);
 let uploadToken = putPolicy.uploadToken(mac);
