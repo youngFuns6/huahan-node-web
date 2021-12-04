@@ -8,6 +8,8 @@ const condition_qk = require('./controllers/condition/contr_con_qk')
 const information = require('./controllers/controllers_inf')
 const login = require('./controllers/controllers_usr')
 
+const upload = require('./upload/uploadApk')
+
 
 
 
@@ -49,5 +51,8 @@ router.put('/information', information.update)
 router.post('/login', login.findUsr)
 
 router.post('/qntoken', login.genQnToken)
+
+// 上传安卓APK
+router.post('/upload/apk', upload.uploadAdrApk)
 
 module.exports = router

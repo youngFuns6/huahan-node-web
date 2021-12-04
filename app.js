@@ -1,4 +1,7 @@
 const express = require('express')
+
+const pathLib = require('path')
+
 const router = require('./router')
 // const jwt = require('jsonwebtoken')
 // const t_secret = require('./config/token.config')
@@ -6,6 +9,8 @@ const router = require('./router')
 const Tutorial = require('./model/user')
 
 const bodyParser = require("body-parser")
+
+const multer = require('multer')
 
 const tutorial = new Tutorial()
 
@@ -39,10 +44,20 @@ app.use((req, res, next) => {
 // })
 
 app.use('/api', (req, res, next) => {
-  // console.log('str', str)
-  // console.log(req.headers.authorization)
-  // console.log(jwt.verify(token, t_secret.TOKEN_SECRET))
+  // get 请求或登录时无需验证
   if (req.url === '/login' || req.method === 'GET') {
+    next()
+    return
+  }
+
+  // post 请求从总后台上传文件时无需验证
+  if (req.headers.referer === 'https://api.quinxiang.com/' && req.method === 'POST') {
+    // console.log(req.file)
+    // let ext = pathLib.parse(req.files[0].originalname).ext
+    // if(ext !== '.apk') return res.json({
+    //   code: '500',
+    //   data: '只支持上传 apk 文件'
+    // })
     next()
     return
   }
@@ -69,6 +84,19 @@ app.use('/api', (req, res, next) => {
   })
 })
 
+app.use(multer({
+  dest: '/www/wwwroot/res.yunxint.com/APP/android',
+  limits: { fileSize: 104857600, files: 1 },
+  fileFilter: (req, file, cb) => {
+    // console.log(file)
+    // 非安卓 apk 禁止上传
+    if(file.mimetype !== 'application/vnd.android.package-archive'){
+      cb(null, false)
+    }else {
+      cb(null, true)
+    }
+  }
+}).any())
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true }));
 
