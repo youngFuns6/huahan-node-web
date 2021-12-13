@@ -50,17 +50,16 @@ app.use('/api', (req, res, next) => {
     return
   }
 
-  // post 请求从总后台上传文件时无需验证
-  if (req.headers.referer === 'https://api.quinxiang.com/' && req.method === 'POST') {
-    // console.log(req.file)
-    // let ext = pathLib.parse(req.files[0].originalname).ext
-    // if(ext !== '.apk') return res.json({
-    //   code: '500',
-    //   data: '只支持上传 apk 文件'
-    // })
+  if (req.headers.referer === 'http://localhost:8080/' && req.method === 'POST') {
     next()
     return
   }
+
+  // post 请求从总后台上传文件时无需验证
+  // if (req.headers.referer === 'https://api.quinxiang.com/' && req.method === 'POST') {
+  //   next()
+  //   return
+  // }
   let token = req.headers.authorization
   // let secret = t_secret.TOKEN_SECRET;
   // const payload = jwt.verify(token, secret)
@@ -85,7 +84,7 @@ app.use('/api', (req, res, next) => {
 })
 
 app.use(multer({
-  dest: '/www/wwwroot/res.yunxint.com/APP/android',
+  dest: './www/wwwroot/res.yunxint.com/APP/android/',
   limits: { fileSize: 104857600, files: 1 },
   fileFilter: (req, file, cb) => {
     // console.log(file)

@@ -1,11 +1,11 @@
 const fs = require('fs')
-const pathLib = require('path')
+// const pathLib = require('path')
 
 exports.uploadAdrApk = (req, res) => {
   // console.log(req.headers.referer)
-  let ext = pathLib.parse(req.files[0].originalname).ext
-  const filename = req.files[0].destination + req.files[0].originalname + ext
-  // console.log(pathLib.parse(req.files[0].originalname).ext)
+  // let ext = pathLib.parse(req.files[0].originalname).ext
+  const filename = req.files[0].destination + req.files[0].originalname
+  console.log(req.files[0])
   fs.rename(req.files[0].path, filename, function(err){
     if(err){
       res.json({
@@ -16,7 +16,7 @@ exports.uploadAdrApk = (req, res) => {
       res.json({
         code: 200,
         message: '上传成功',
-        data: filename
+        data: req.files[0].originalname
       })
     }
   })
