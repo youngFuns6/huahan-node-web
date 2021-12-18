@@ -78,13 +78,13 @@ Object.assign(Tutorial.prototype, {
   },
   // 删除
   deleteById(id, result) {
-    sql.query(`DELETE FROM web_condition_product WHERE id=${id}`, (err, res) => {
+    sql.query(`DELETE FROM huahan_web_condition WHERE id=${id}`, (err, res) => {
       if (err) {
         console.log("error: ", err)
         result(err, null)
         return
       }
-      console.log("delete web_condition_product: ", {id})
+      console.log("delete huahan_web_condition: ", {id})
       result(null, {id})
     })
   }

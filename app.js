@@ -1,6 +1,7 @@
 const express = require('express')
 
-const pathLib = require('path')
+const path = require('path')
+
 
 const router = require('./router')
 // const jwt = require('jsonwebtoken')
@@ -9,8 +10,6 @@ const router = require('./router')
 const Tutorial = require('./user/model')
 
 const bodyParser = require("body-parser")
-
-const multer = require('multer')
 
 const tutorial = new Tutorial()
 
@@ -29,6 +28,9 @@ app.use((req, res, next) => {
   req.method === 'OPTIONS' ? res.status(204).end() : next()
 })
 
+// 开放静态资源目录
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.use('/api', (req, res, next) => {
   // get 请求或登录时无需验证
@@ -38,8 +40,6 @@ app.use('/api', (req, res, next) => {
   }
 
   let token = req.headers.authorization
-  // let secret = t_secret.TOKEN_SECRET;
-  // const payload = jwt.verify(token, secret)
   tutorial.getToken(token, (err, data) => {
     console.log("token: ", data)
     if (err) {

@@ -41,7 +41,6 @@ router.post('/login', user.findUsr)
 var path = require("path");
 var multer = require("multer");
 
-
 var fileFilter = function (req, file, cb) {
   var acceptableMime = ["image/jpeg", "image/png", "image/jpg", "image/gif"];
   // 限制类型
@@ -55,7 +54,7 @@ var fileFilter = function (req, file, cb) {
 
 var storage = multer.diskStorage({
   //设置 上传图片服务器位置
-  destination: path.resolve(__dirname, "./img"),
+  destination: path.resolve(__dirname, "./public/img"),
   //设置 上传文件保存的文件名
   filename: function (req, file, cb) {
   // 获取后缀扩展
