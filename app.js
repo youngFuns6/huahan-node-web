@@ -6,7 +6,7 @@ const router = require('./router')
 // const jwt = require('jsonwebtoken')
 // const t_secret = require('./config/token.config')
 
-const Tutorial = require('./model/user')
+const Tutorial = require('./user/model')
 
 const bodyParser = require("body-parser")
 
@@ -23,25 +23,12 @@ app.use((req, res, next) => {
       'Access-Control-Allow-Origin': req.headers.origin || '*',
       'Access-Control-Allow-Headers': 'X-Requested-With,Content-Type,Authorization',
       'Access-Control-Allow-Methods': 'PUT,POST,GET,DELETE,OPTIONS',
-      // "Access-Control-Request-Headers": "Origin, X-Requested-With, content-Type, Accept, Authorization",
       'Content-Type': 'application/json; charset=utf-8',
     })
   }
   req.method === 'OPTIONS' ? res.status(204).end() : next()
 })
 
-// app.use((req, res, next) => {
-//   // console.log('req: ', req)
-//   let str = ''
-//   req.on('data', chunk => {
-//     str += chunk
-//   })
-//   req.on('end', () => {
-//     // console.log('str: ', str)
-//     // req = str
-//     next(str)
-//   })
-// })
 
 app.use('/api', (req, res, next) => {
   // get 请求或登录时无需验证
@@ -50,16 +37,6 @@ app.use('/api', (req, res, next) => {
     return
   }
 
-  if (req.headers.referer === 'http://localhost:8080/' && req.method === 'POST') {
-    next()
-    return
-  }
-
-  // post 请求从总后台上传文件时无需验证
-  // if (req.headers.referer === 'https://api.quinxiang.com/' && req.method === 'POST') {
-  //   next()
-  //   return
-  // }
   let token = req.headers.authorization
   // let secret = t_secret.TOKEN_SECRET;
   // const payload = jwt.verify(token, secret)
@@ -83,19 +60,19 @@ app.use('/api', (req, res, next) => {
   })
 })
 
-app.use(multer({
-  dest: './www/wwwroot/res.yunxint.com/APP/android/',
-  limits: { fileSize: 104857600, files: 1 },
-  fileFilter: (req, file, cb) => {
-    // console.log(file)
-    // 非安卓 apk 禁止上传
-    if(file.mimetype !== 'application/vnd.android.package-archive'){
-      cb(null, false)
-    }else {
-      cb(null, true)
-    }
-  }
-}).any())
+// app.use(multer({
+//   dest: './www/wwwroot/res.yunxint.com/APP/android/',
+//   limits: { fileSize: 5120, files: 1 },
+//   fileFilter: (req, file, cb) => {
+//     console.log(file)
+//     if(!/image/.test(file.mimetype) || !/video/.test(file.mimetype)){
+//       cb(null, false)
+//     }else {
+//       cb(null, true)
+//     }
+//   }
+// }).any())
+
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true }));
 

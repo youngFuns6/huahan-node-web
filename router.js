@@ -1,43 +1,27 @@
+
+
 const express = require('express')
 const router = express.Router()
-const condition_pr = require('./controllers/condition/contr_con_pr')
-const condition_qx = require('./controllers/condition/contr_con_qx')
-const condition_qk = require('./controllers/condition/contr_con_qk')
+const condition = require('./condition/condition')
 
 
-const information = require('./controllers/controllers_inf')
-const login = require('./controllers/controllers_usr')
+const information = require('./information/information')
+const user = require('./user/manage')
 
-const upload = require('./upload/uploadApk')
-
-
-
-
-router.get('/product/condition', condition_pr.findAll)
-
-router.post('/product/condition', condition_pr.create)
-
-router.put('/product/condition', condition_pr.update)
-
-router.delete('/product/condition', condition_pr.delete)
+const upload = require('./upload/upload')
+// const { path } = require('express/lib/application')
 
 
-router.get('/qunxiang/condition', condition_qx.findAll)
-
-router.post('/qunxiang/condition', condition_qx.create)
-
-router.put('/qunxiang/condition', condition_qx.update)
-
-router.delete('/qunxiang/condition', condition_qx.delete)
 
 
-router.get('/qunkong/condition', condition_qk.findAll)
+router.get('/condition', condition.findAll)
 
-router.post('/qunkong/condition', condition_qk.create)
+router.post('/condition', condition.create)
 
-router.put('/qunkong/condition', condition_qk.update)
+router.put('/condition', condition.update)
 
-router.delete('/qunkong/condition', condition_qk.delete)
+router.delete('/condition', condition.delete)
+
 
 
 
@@ -48,11 +32,53 @@ router.post('/information', information.create)
 
 router.put('/information', information.update)
 
-router.post('/login', login.findUsr)
 
-router.post('/qntoken', login.genQnToken)
 
-// 上传安卓APK
-router.post('/upload/apk', upload.uploadAdrApk)
+router.post('/login', user.findUsr)
+
+
+// 上传图片
+var path = require("path");
+var multer = require("multer");
+
+
+var fileFilter = function (req, file, cb) {
+  var acceptableMime = ["image/jpeg", "image/png", "image/jpg", "image/gif"];
+  // 限制类型
+  // null是固定写法
+  if (acceptableMime.indexOf(file.mimetype) !== -1) {
+    cb(null, true); // 通过上传
+  } else {
+    cb(null, false); // 禁止上传
+  }
+}
+
+var storage = multer.diskStorage({
+  //设置 上传图片服务器位置
+  destination: path.resolve(__dirname, "./img"),
+  //设置 上传文件保存的文件名
+  filename: function (req, file, cb) {
+  // 获取后缀扩展
+    let extName = file.originalname.slice(file.originalname.lastIndexOf("."));  //.jpg
+ // 获取名称
+    let fileName = 'huahan' + '_' + Date.now(); 
+    console.log(fileName + extName); //12423543465.jpg
+    cb(null, fileName + extName);
+  },
+});
+
+var limits = {
+  fileSize:  "2MB", //设置限制（可选）
+}
+
+//单张上传
+
+const imageUploader = multer({
+  fileFilter,
+  storage,
+  limits
+}).single("file"); //文件上传预定 name 或者 字段
+
+router.post('/upload', imageUploader, upload.uploadFiles)
 
 module.exports = router

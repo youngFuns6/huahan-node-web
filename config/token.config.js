@@ -1,3 +1,3 @@
 module.exports = {
-  TOKEN_SECRET: 'QUNXIANG2020'
+  TOKEN_SECRET: 'huahan2021'
 }
