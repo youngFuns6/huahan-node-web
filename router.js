@@ -2,13 +2,20 @@
 
 const express = require('express')
 const router = express.Router()
+
 const condition = require('./condition/condition')
 
+const goods = require('./goods/goods')
 
-const information = require('./information/information')
+const goodsCate = require('./goodsCate/cate')
+
+const info = require('./info/info')
+
 const user = require('./user/manage')
 
 const upload = require('./upload/upload')
+
+const feedback = require('./feedback/feedback')
 // const { path } = require('express/lib/application')
 
 
@@ -24,17 +31,48 @@ router.delete('/condition', condition.delete)
 
 
 
+router.get('/goods', goods.findAll)
+
+router.post('/goods', goods.create)
+
+router.put('/goods', goods.update)
+
+router.delete('/goods', goods.delete)
 
 
-router.get('/information', information.findInfo)
+router.get('/goods/cate', goodsCate.findAll)
 
-router.post('/information', information.create)
+router.post('/goods/cate', goodsCate.create)
 
-router.put('/information', information.update)
+router.put('/goods/cate', goodsCate.update)
+
+router.delete('/goods/cate', goodsCate.delete)
+
+
+
+
+
+router.get('/info', info.findInfo)
+
+// router.post('/info', info.create)
+
+router.put('/info', info.update)
+
+
+
+router.get('/feedback', feedback.findAll)
+
+router.delete('/feedback', feedback.delete)
+
+router.post('/feedback', feedback.create)
+
 
 
 
 router.post('/login', user.findUsr)
+
+router.put('/login', user.updateUsr)
+
 
 
 // 上传图片

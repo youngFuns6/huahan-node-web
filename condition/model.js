@@ -28,7 +28,8 @@ Object.assign(Tutorial.prototype, {
     if (tutorial.id !== undefined) return this.findById(tutorial.id, result)
     let m = (tutorial.page - 1) * tutorial.pageSize || 0
     let n = tutorial.pageSize || 10
-    sql.query(`SELECT * FROM huahan_web_condition WHERE type=${tutorial.type} ORDER BY id DESC limit ${m},${n}; SELECT FOUND_ROWS() FROM huahan_web_condition WHERE type=${tutorial.type}`, (err, res) => {
+    let sqlText = tutorial.type === undefined ? `SELECT * FROM huahan_web_condition ORDER BY id DESC limit ${m},${n}; SELECT FOUND_ROWS() FROM huahan_web_condition` : `SELECT * FROM huahan_web_condition WHERE type=${tutorial.type} ORDER BY id DESC limit ${m},${n}; SELECT FOUND_ROWS() FROM huahan_web_condition WHERE type=${tutorial.type}`
+    sql.query(sqlText, (err, res) => {
       if (err) {
         console.log("error: ", err)
         result(err, null)

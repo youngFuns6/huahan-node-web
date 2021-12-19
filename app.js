@@ -38,6 +38,10 @@ app.use('/api', (req, res, next) => {
     next()
     return
   }
+  if (req.url === '/feedback' && req.method === 'POST') {
+    next()
+    return
+  }
 
   let token = req.headers.authorization
   tutorial.getToken(token, (err, data) => {

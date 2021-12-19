@@ -43,6 +43,48 @@ Object.assign(Tutorial.prototype, {
       result(null, res[0])
     })
   },
+  setPassword(tutorial, result) {
+    let username = tutorial.username
+    let password = tutorial.password
+    let newPassword = tutorial.newPassword
+    sql.query(`SELECT * FROM huahan_web_user WHERE username='${username}'`, (err, res) => {
+      
+      if (err) {
+        console.log("error: ", err)
+        result(err, null)
+        return
+      } else {
+        if (res[0] === undefined) {
+          return result(null, res[0])
+        } else {
+          console.log('jjjjj', res[0])
+          console.log(password)
+          if (res[0].password === password && res[0].password !== newPassword) {
+            sql.query(`UPDATE huahan_web_user SET password='${newPassword}' WHERE username='${username}'`, (err, res) => {
+              if (err) {
+                console.log("err:", err)
+                result(err, null)
+                return
+              }
+              result(null, {
+                username,
+                password,
+                newPassword
+              })
+            })
+          } else {
+            result(null, res[0])
+          }
+
+
+        }
+
+      }
+
+
+
+    })
+  }
 })
 
 module.exports = Tutorial

@@ -8,7 +8,7 @@ const tutorial = new Tutorial()
 
 exports.findUsr = (req, res) => {
   // console.log('000: ', req.body)
-  
+
   if (!req.body.username || !req.body.password) {
     res.status(400).json({
       code: -1002,
@@ -17,7 +17,7 @@ exports.findUsr = (req, res) => {
     return
   }
   tutorial.getUser(req.body, (err, data) => {
-    
+
     if (err) {
       res.status(500).json({
         code: -1003,
@@ -63,21 +63,48 @@ exports.findUsr = (req, res) => {
   })
 }
 
-// exports.genQnToken = (req, res) => {
-//   const qiniu = require("qiniu");
-// //客户端调用接口，生成token
-// let accessKey = 'WI4iwFyCoa-F0Mv-XW1Yoo2F-nc_joq-EO_Hvzgv';
-// let secretKey = '39syvi2jpeVMdJ9TCnGmK-_OCHNWSWggQqYCwETg';
-// let mac = new qiniu.auth.digest.Mac(accessKey, secretKey);
-// let options = {
-//   scope: 'qunxiang-guanwang', //七牛资源目录
-// };
-// let putPolicy = new qiniu.rs.PutPolicy(options);
-// let uploadToken = putPolicy.uploadToken(mac);
-// console.log(uploadToken);
-// res.json({
-//   code: 200,
-//   message: 'success',
-//   data: uploadToken
-// })
-// }
+exports.updateUsr = (req, res) => {
+  if (req.body.username === undefined || req.body.password === undefined || req.body.newPassword === undefined) {
+    res.status(400).json(
+      {
+        code: -1002,
+        message: '参数错误'
+      }
+    )
+  } else {
+    tutorial.setPassword(req.body, (err, data) => {
+      if (err) {
+        res.status(500).json({
+          code: -1003,
+          message: err.message || '系统错误'
+        })
+      } else {
+        if (data === undefined || req.body.password !== data.password) {
+          // console.log(data.password)
+          res.status(400).json({
+            code: -1005,
+            message: '用户名或密码错误'
+          })
+          // res.send('999')
+          return
+        }
+        if (req.body.newPassword === data.password) {
+          res.status(400).json({
+            code: -1005,
+            message: '旧密码与新密码相同'
+          })
+          // res.send('999')
+          return
+        }
+        res.status(200).json({
+          code: 200,
+          message: "success",
+          data: {
+            username: data.username,
+            password: data.newPassword
+          }
+        })
+      }
+    })
+  }
+}
