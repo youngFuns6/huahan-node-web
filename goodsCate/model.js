@@ -29,7 +29,7 @@ Object.assign(Tutorial.prototype, {
     if (tutorial.type !== undefined) return this.findById(tutorial.type, result)
     let m = (tutorial.page - 1) * tutorial.pageSize || 0
     let n = tutorial.pageSize || 10
-    let sqlText = JSON.stringify(tutorial) == '{}' ? `SELECT * FROM huahan_web_cate ORDER BY type` : `SELECT * FROM huahan_web_cate ORDER BY type DESC limit ${m},${n}; SELECT FOUND_ROWS() FROM huahan_web_cate`
+    let sqlText = JSON.stringify(tutorial) == '{}' ? `SELECT * FROM huahan_web_cate ORDER BY type DESC` : `SELECT * FROM huahan_web_cate ORDER BY type DESC limit ${m},${n}; SELECT FOUND_ROWS() FROM huahan_web_cate`
     sql.query(sqlText, (err, res) => {
       if (err) {
         console.log("error: ", err)

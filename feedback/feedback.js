@@ -3,8 +3,8 @@ const tutorial = new Tutorial()
 
 
 exports.create = (req, res) => {
-  // console.log('rrrrr',req.body)
-  if (req.body.phone === undefined || req.body.service === undefined){
+  console.log('rrrrr',req.body)
+  if (!req.body.phone || !req.body.service || req.body.phone === undefined || req.body.service === undefined){
     res.status(400).json({
       code: -1002,
       message: '手机号和需求内容必填',

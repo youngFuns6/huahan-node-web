@@ -54,7 +54,7 @@ app.use('/api', (req, res, next) => {
       return
     }
     if (data === undefined) {
-      res.status(401).json({
+      res.status(500).json({
         code: -3006,
         message: '登录已失效'
       })
