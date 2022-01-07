@@ -31,6 +31,8 @@ router.delete('/condition', condition.delete)
 
 
 
+
+
 router.get('/goods', goods.findAll)
 
 router.post('/goods', goods.create)
@@ -38,6 +40,8 @@ router.post('/goods', goods.create)
 router.put('/goods', goods.update)
 
 router.delete('/goods', goods.delete)
+
+router.post('/goods/top', goods.top)
 
 
 router.get('/goods/cate', goodsCate.findAll)

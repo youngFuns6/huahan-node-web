@@ -88,3 +88,21 @@ exports.delete = (req, res) => {
     }
   })
 }
+
+
+exports.top = (req, res) => {
+  tutorial.topGoods(req, (err, data) => {
+    if (err) {
+      res.status(500).json({
+        code: -1003,
+        message: err.message || '系统错误'
+      })
+    } else {
+      res.json({
+        code: 200,
+        message: 'success',
+        data
+      })
+    }
+  })
+}

@@ -88,6 +88,19 @@ Object.assign(Tutorial.prototype, {
       console.log("delete huahan_web_goods: ", {id})
       result(null, {id})
     })
+  },
+  // 置顶
+  topCondition(tutorial, result) {
+    sql.query(`select * from table order by id in(${tutorial.id}) desc`, (err, res) => {
+      if (err) {
+        console.log("error: ", err)
+        result(err, null)
+        return
+      }
+      console.log('999999', res)
+      console.log("topId:", tutorial)
+      result(null, tutorial)
+    })
   }
 })
 
