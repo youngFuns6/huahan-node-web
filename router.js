@@ -95,6 +95,7 @@ var storage = multer.diskStorage({
   destination: path.resolve(__dirname, "./public/img"),
   //设置 上传文件保存的文件名
   filename: function (req, file, cb) {
+    // console.log('666666',req)
   // 获取后缀扩展
     let extName = file.originalname.slice(file.originalname.lastIndexOf("."));  //.jpg
  // 获取名称
@@ -105,7 +106,7 @@ var storage = multer.diskStorage({
 });
 
 var limits = {
-  fileSize:  "2MB", //设置限制（可选）
+  fileSize:  "5MB", //设置限制（可选）
 }
 
 //单张上传
@@ -114,7 +115,7 @@ const imageUploader = multer({
   fileFilter,
   storage,
   limits
-}).single("file"); //文件上传预定 name 或者 字段
+}).array("file", 20); //文件上传预定 name 或者 字段
 
 router.post('/upload', imageUploader, upload.uploadFiles)
 
