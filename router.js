@@ -52,6 +52,8 @@ router.put('/goods/cate', goodsCate.update)
 
 router.delete('/goods/cate', goodsCate.delete)
 
+router.post('/goods/cateTop', goodsCate.top)
+
 
 
 

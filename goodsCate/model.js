@@ -11,7 +11,7 @@ class Tutorial {
 Object.assign(Tutorial.prototype, {
   // 添加
   create(newTutorial, result) {
-    console.log(newTutorial)
+    // console.log(newTutorial)
     sql.query('INSERT INTO huahan_web_cate SET ?', newTutorial, (err, res) => {
       if (err) {
         console.log("error: ", err)
@@ -29,7 +29,7 @@ Object.assign(Tutorial.prototype, {
     if (tutorial.type !== undefined) return this.findById(tutorial.type, result)
     let m = (tutorial.page - 1) * tutorial.pageSize || 0
     let n = tutorial.pageSize || 10
-    let sqlText = JSON.stringify(tutorial) == '{}' ? `SELECT * FROM huahan_web_cate ORDER BY type DESC` : `SELECT * FROM huahan_web_cate ORDER BY type DESC limit ${m},${n}; SELECT FOUND_ROWS() FROM huahan_web_cate`
+    let sqlText = JSON.stringify(tutorial) == '{}' ? `SELECT * FROM huahan_web_cate ORDER BY FIELD(setTop,0,1,2,3,4,5) DESC, type DESC` : `SELECT * FROM huahan_web_cate ORDER BY FIELD(setTop,0,1,2,3,4,5) DESC, type DESC limit ${m},${n}; SELECT FOUND_ROWS() FROM huahan_web_cate`
     sql.query(sqlText, (err, res) => {
       if (err) {
         console.log("error: ", err)
@@ -104,6 +104,62 @@ Object.assign(Tutorial.prototype, {
       }
     })
 
+  },
+
+  // 排序置顶
+  topGoodsCate(tutorial, result) {
+    // 取出所有置顶数据
+    sql.query(`SELECT * FROM huahan_web_cate WHERE setTop is not null`, (err, topRes) => {
+      if (err) {
+        console.log("error: ", err)
+        result(err, null)
+        return
+      }
+
+      let TopNumArr = topRes.map(item => item.setTop)
+
+      let cancelTopArr = []
+      // 如果没有置顶项 则直接置顶本次提交的数据
+      if (TopNumArr.length) {
+        // 判断置顶标记是否被占用
+        tutorial.forEach((item, flag) => {
+          if (TopNumArr.indexOf(flag) !== -1) {
+            // 存储需要取消置顶的数据
+            cancelTopArr.push(TopNumArr[flag])
+          }
+        });
+        // console.log('收到后登记卡萨汇顶科技暗杀很大：', cancelTopArr)
+        // 取消原置顶项
+        let strCancelTop = ''
+        cancelTopArr.forEach(item => {
+          strCancelTop += `WHEN ${item} THEN null `
+        })
+        console.log('strCancelTop:', strCancelTop)
+        // console.log(TopNumArr)
+        sql.query(`UPDATE huahan_web_cate SET setTop = CASE setTop ${strCancelTop}END WHERE FIND_IN_SET(setTop,"${cancelTopArr.join(',')}")`, (err, res) => {
+          if (err) {
+            console.log("error: ", err)
+            result(err, null)
+            return
+          }
+        })
+      }
+      // 设置当前置顶项
+      let strSetTop = ''
+      tutorial.forEach((item, index) => {
+        strSetTop += `WHEN ${item} THEN ${index} `
+      })
+      sql.query(`UPDATE huahan_web_cate SET setTop = CASE type ${strSetTop}END WHERE FIND_IN_SET(type,"${tutorial.join(',')}")`, (err, res) => {
+        if (err) {
+          console.log("error: ", err)
+          result(err, null)
+          return
+        }
+        console.log('本次置顶type：', tutorial)
+        // console.log('本次置顶id：', res)
+        result(null, tutorial)
+      })
+    })
   }
 })
 

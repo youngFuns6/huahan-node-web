@@ -91,7 +91,21 @@ exports.delete = (req, res) => {
 
 
 exports.top = (req, res) => {
-  tutorial.topGoods(req, (err, data) => {
+  tutorial.topGoods(req.body, (err, data) => {
+    if (!req.body) {
+      res.status(400).json({
+        code: -1002,
+        message: '参数错误',
+      })
+      return
+    }
+    if (req.body.length > 5) {
+      res.status(400).json({
+        code: -1002,
+        message: '只允许指定五条数据排序',
+      })
+      return
+    }
     if (err) {
       res.status(500).json({
         code: -1003,

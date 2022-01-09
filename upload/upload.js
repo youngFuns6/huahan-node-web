@@ -1,3 +1,5 @@
+// http://api.czhhhb.com/public/img/
+
 exports.uploadFiles = (req, res) => {
   // console.log('多文件', req.files)
 
