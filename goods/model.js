@@ -26,22 +26,37 @@ Object.assign(Tutorial.prototype, {
   getAll(tutorial, result) {
     console.log(tutorial)
     if (tutorial.id !== undefined) return this.findById(tutorial.id, result)
-    let m = (tutorial.page - 1) * tutorial.pageSize || 0
-    let n = tutorial.pageSize || 10
-    let sqlText = tutorial.type === null || tutorial.type === undefined ? `SELECT * FROM huahan_web_goods ORDER BY FIELD(setTop,0,1,2,3,4,5) DESC, id DESC limit ${m},${n}; SELECT FOUND_ROWS() FROM huahan_web_goods` : `SELECT * FROM huahan_web_goods WHERE type=${tutorial.type} ORDER BY FIELD(setTop,0,1,2,3,4,5) DESC, id DESC limit ${m},${n}; SELECT FOUND_ROWS() FROM huahan_web_goods WHERE type=${tutorial.type}`
-    sql.query(sqlText, (err, res) => {
-      if (err) {
-        console.log("error: ", err)
-        result(err, null)
+
+    sql.query(`SELECT FOUND_ROWS() FROM huahan_web_goods`, (totalErr, totalRes) => {
+      if (totalErr) {
+        console.log("error: ", totalErr)
+        result(totalErr, null)
         return
       }
-      console.log('huahan_web_goods', res)
-      // sql.query(`SELECT FOUND_ROWS() FROM web_condition WHERE type=${tutorial.type}`, (errRows, rows) => {
-      //   // console.log(rows.length)
-      result(null, { res: res[0], total: res[1].length })
-      // })
-      // result(null, {list: res, total})
+      let totalArr = totalRes.map((item, index) => {
+        return index
+      })
+
+      let m = (tutorial.page - 1) * tutorial.pageSize || 0
+      let n = tutorial.pageSize || 10
+      let sqlText = tutorial.type === null || tutorial.type === undefined ? `SELECT * FROM huahan_web_goods ORDER BY FIELD(setTop,${totalArr.join(',')}) DESC, id DESC limit ${m},${n}; SELECT FOUND_ROWS() FROM huahan_web_goods` : `SELECT * FROM huahan_web_goods WHERE type=${tutorial.type} ORDER BY FIELD(setTop,0,1,2,3,4,5) DESC, id DESC limit ${m},${n}; SELECT FOUND_ROWS() FROM huahan_web_goods WHERE type=${tutorial.type}`
+      sql.query(sqlText, (err, res) => {
+        if (err) {
+          console.log("error: ", err)
+          result(err, null)
+          return
+        }
+        console.log('huahan_web_goods', res)
+        // sql.query(`SELECT FOUND_ROWS() FROM web_condition WHERE type=${tutorial.type}`, (errRows, rows) => {
+        //   // console.log(rows.length)
+        result(null, { res: res[0], total: res[1].length })
+        // })
+        // result(null, {list: res, total})
+      })
+
     })
+
+
   },
   // 根据id获取
   findById(id, result) {
@@ -99,40 +114,41 @@ Object.assign(Tutorial.prototype, {
         result(err, null)
         return
       }
-      
-      let TopNumArr = topRes.map(item => item.setTop)
-  
-      let cancelTopArr = []
+
+      let TopNumArr = topRes.map(item => item.id)
+
+      let disCancelTopArr = []
       // 如果没有置顶项 则直接置顶本次提交的数据
       if (TopNumArr.length) {
         // 判断置顶标记是否被占用
-        tutorial.forEach((item, flag) => {
-          if (TopNumArr.indexOf(flag) !== -1) {
+        TopNumArr.forEach((item, index) => {
+          if (tutorial.indexOf(item) === -1) {
             // 存储需要取消置顶的数据
-            cancelTopArr.push(TopNumArr[flag])
+            disCancelTopArr.push(TopNumArr[index])
           }
         });
         // console.log('收到后登记卡萨汇顶科技暗杀很大：', cancelTopArr)
-        // 取消原置顶项
-        let strCancelTop = ''
-        cancelTopArr.forEach(item => {
-          strCancelTop += `WHEN ${item} THEN null `
-        })
-        console.log('strCancelTop:', strCancelTop)
-        // console.log(TopNumArr)
-        sql.query(`UPDATE huahan_web_goods SET setTop = CASE setTop ${strCancelTop}END WHERE FIND_IN_SET(setTop,"${cancelTopArr.join(',')}")`, (err, res) => {
-          if (err) {
-            console.log("error: ", err)
-            result(err, null)
-            return
-          }
-        })
-      } 
-        // 设置当前置顶项
-        let strSetTop = ''
-        tutorial.forEach((item, index) => {
-          strSetTop += `WHEN ${item} THEN ${index} `
-        })
+        // // 取消原置顶项
+        // let strCancelTop = ''
+        // cancelTopArr.forEach(item => {
+        //   strCancelTop += `WHEN ${item} THEN null `
+        // })
+        // console.log('strCancelTop:', strCancelTop)
+        // // console.log(TopNumArr)
+        // sql.query(`UPDATE huahan_web_goods SET setTop = CASE setTop ${strCancelTop}END WHERE FIND_IN_SET(setTop,"${cancelTopArr.join(',')}")`, (err, res) => {
+        //   if (err) {
+        //     console.log("error: ", err)
+        //     result(err, null)
+        //     return
+        //   }
+        // })
+      }
+      // 设置当前置顶项
+      let strSetTop = ''
+      tutorial.unshift(...disCancelTopArr)
+      tutorial.forEach((item, index) => {
+        strSetTop += `WHEN ${item} THEN ${index} `
+      })
       sql.query(`UPDATE huahan_web_goods SET setTop = CASE id ${strSetTop}END WHERE FIND_IN_SET(id,"${tutorial.join(',')}")`, (err, res) => {
         if (err) {
           console.log("error: ", err)
