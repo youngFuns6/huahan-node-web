@@ -1,5 +1,5 @@
 const sql = require('../model/db')
-const unique = require('../utils/unique') 
+
 
 class Tutorial {
   constructor() {
@@ -42,7 +42,7 @@ Object.assign(Tutorial.prototype, {
 
       let m = (tutorial.page - 1) * tutorial.pageSize || 0
       let n = tutorial.pageSize || 10
-      let sqlText = JSON.stringify(tutorial) == '{}' ? `SELECT * FROM huahan_web_cate ORDER BY FIELD(setTop, ${totalArr.join(',')}) DESC, type DESC; SELECT FOUND_ROWS() FROM huahan_web_cate` : `SELECT * FROM huahan_web_cate ORDER BY FIELD(setTop,0,1,2,3,4,5) DESC, type DESC limit ${m},${n}`
+      let sqlText = JSON.stringify(tutorial) == '{}' ? `SELECT * FROM huahan_web_cate ORDER BY FIELD(setTop, ${totalArr.length ? totalArr.join(',') : "''"}) DESC, type DESC` : `SELECT * FROM huahan_web_cate ORDER BY FIELD(setTop,${totalArr.length ? totalArr.join(',') : "''"}) DESC, type DESC limit ${m},${n}`
       sql.query(sqlText, (err, res) => {
         if (err) {
           console.log("error: ", err)

@@ -125,4 +125,29 @@ const imageUploader = multer({
 
 router.post('/upload', imageUploader, upload.uploadFiles)
 
+
+// 上传sitemap文件
+let sitemapStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // cb(null, 'www/wwwroot/www.youddian.com/youddian_web')
+    cb(null, `/root/huahan/huahan_web/huahan_web_nuxt/`)
+  },
+  filename: function (req, file, cb) {
+    if (!req.body.web) return
+    cb(null, file.originalname)
+  }
+})
+let sitemapUploader = multer({
+  sitemapStorage,
+  limits: { fileSize: 104857600, files: 1 },
+  fileFilter(req, file, cb) {
+    if (file.mimetype !== 'text/xml' && file.originalname !== 'sitemap.xml') {
+      cb(null, false)
+    } else {
+      cb(null, true)
+    }
+  }
+}).any()
+router.post('/upload/sitemap', sitemapUploader, upload.uploadFiles)
+
 module.exports = router

@@ -39,7 +39,7 @@ Object.assign(Tutorial.prototype, {
 
       let m = (tutorial.page - 1) * tutorial.pageSize || 0
       let n = tutorial.pageSize || 10
-      let sqlText = tutorial.type === null || tutorial.type === undefined ? `SELECT * FROM huahan_web_goods ORDER BY FIELD(setTop,${totalArr.join(',')}) DESC, id DESC limit ${m},${n}; SELECT FOUND_ROWS() FROM huahan_web_goods` : `SELECT * FROM huahan_web_goods WHERE type=${tutorial.type} ORDER BY FIELD(setTop,0,1,2,3,4,5) DESC, id DESC limit ${m},${n}; SELECT FOUND_ROWS() FROM huahan_web_goods WHERE type=${tutorial.type}`
+      let sqlText = tutorial.type === null || tutorial.type === undefined ? `SELECT * FROM huahan_web_goods ORDER BY FIELD(setTop,${totalArr.length ? totalArr.join(',') : "''"}) DESC, id DESC limit ${m},${n}; SELECT FOUND_ROWS() FROM huahan_web_goods` : `SELECT * FROM huahan_web_goods WHERE type=${tutorial.type} ORDER BY FIELD(setTop,${totalArr.length ? totalArr.join(',') : "''"}) DESC, id DESC limit ${m},${n}; SELECT FOUND_ROWS() FROM huahan_web_goods WHERE type=${tutorial.type}`
       sql.query(sqlText, (err, res) => {
         if (err) {
           console.log("error: ", err)
