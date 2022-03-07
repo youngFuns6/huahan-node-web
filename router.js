@@ -150,4 +150,20 @@ let sitemapUploader = multer({
 }).any()
 router.post('/upload/sitemap', sitemapUploader, upload.uploadFiles)
 
+// 百度收录提交
+router.post('/noticeApi', (req, res) => {
+  let { bdToken, urls } = req.body
+  axios({
+    url: `http://data.zz.baidu.com/urls?site=https://www.czhhhb.com&token=${bdToken}`,
+    method: 'post',
+    headers: { 'Content-Type': 'text/plain', 'Host': 'data.zz.baidu.com', 'User-Agent': 'curl/7.12.1' },
+    data: urls
+  }).then(() => {
+    res.status(200).json({ code: 200, message: '提交成功' })
+  }).catch(err => {
+    // console.log(err)
+    res.status(402).json({ code: 200, message: err })
+  })
+})
+
 module.exports = router

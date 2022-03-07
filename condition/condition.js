@@ -1,6 +1,6 @@
 const Tutorial = require('./model')
-const tutorial = new Tutorial()
 
+const tutorial = new Tutorial()
 
 exports.create = (req, res) => {
   // console.log(req)
@@ -44,7 +44,7 @@ exports.findAll = (req, res) => {
       res.json({
         code: 200,
         message: 'success',
-        data: data.res,
+        data: data,
         total: data.total
       })
     }

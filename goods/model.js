@@ -1,4 +1,5 @@
 const sql = require('../model/db')
+const { getFrontId, getBehindId } = require('../utils/getAdjoinById')
 
 class Tutorial {
   constructor() {
@@ -68,8 +69,16 @@ Object.assign(Tutorial.prototype, {
         return
       }
       if (res.length) {
+        // 查询前一条数据
+        let frontId = getFrontId(id, 'huahan_web_goods')
+        // 查询后一条数据
+        let behindId = getBehindId(id, 'huahan_web_goods')
+        Promise.all([frontId, behindId]).then(value => {
+          result(null, { res: res[0], frontId: value[0], behindId: value[1] })
+        }).catch(() => {
+          result(null, { res: res[0], frontId: null, behindId: null })
+        })
         console.log("found huahan_web_goods: ", res[0])
-        result(null, { res: res[0] })
         return
       }
       result({ kind: "not_found" }, null)
