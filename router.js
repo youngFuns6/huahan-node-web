@@ -14,6 +14,7 @@ const info = require('./info/info')
 const user = require('./user/manage')
 
 const upload = require('./upload/upload')
+const uploadSite = require('./upload/uploadSitemap')
 
 const feedback = require('./feedback/feedback')
 // const { path } = require('express/lib/application')
@@ -81,7 +82,6 @@ router.put('/login', user.updateUsr)
 
 
 
-// 上传图片
 var path = require("path");
 var multer = require("multer");
 
@@ -130,17 +130,18 @@ router.post('/upload', imageUploader, upload.uploadFiles)
 let sitemapStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     // cb(null, 'www/wwwroot/www.youddian.com/youddian_web')
-    cb(null, `/root/huahan/huahan_web/huahan_web_nuxt/`)
+    cb(null, `/root/huahan/huahan_web/huahan_web_nuxt`)
+    // cb(null, `./root`)
   },
   filename: function (req, file, cb) {
-    if (!req.body.web) return
     cb(null, file.originalname)
   }
 })
 let sitemapUploader = multer({
-  sitemapStorage,
+  storage: sitemapStorage,
   limits: { fileSize: 104857600, files: 1 },
   fileFilter(req, file, cb) {
+    console.log('shdahdakhdkadsdsadsadasdsadasdas', file)
     if (file.mimetype !== 'text/xml' && file.originalname !== 'sitemap.xml') {
       cb(null, false)
     } else {
@@ -148,7 +149,7 @@ let sitemapUploader = multer({
     }
   }
 }).any()
-router.post('/upload/sitemap', sitemapUploader, upload.uploadFiles)
+router.post('/upload/sitemap', sitemapUploader, uploadSite.uploadSitemap)
 
 // 百度收录提交
 router.post('/noticeApi', (req, res) => {
