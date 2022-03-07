@@ -10,7 +10,7 @@ exports.uploadFiles = (req, res) => {
     })
   }
   if (req.files.length === 1) {
-    let imgSrc = 'http://localhost:5003/img/' + req.files[0].filename
+    let imgSrc = 'https://api.czhhhb.com/public/img/' + req.files[0].filename
     res.json({
       code: 200,
       message: '上传成功',
@@ -19,7 +19,7 @@ exports.uploadFiles = (req, res) => {
   } else {
     let arr = []
     req.files.forEach(item => {
-      arr.push('http://localhost:5003/img/' + item.filename)
+      arr.push('https://api.czhhhb.com/public/img/' + item.filename)
     });
     res.json({
       code: 200,
