@@ -31,8 +31,6 @@ exports.uploadFiles = (req, res) => {
   //   name: req.file.filename,
   //   url: 'http://localhost:5003/img/' + req.file.filename
   // })
-
-
 }
 
 

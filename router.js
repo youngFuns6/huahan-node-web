@@ -117,7 +117,6 @@ var limits = {
 }
 
 //单张上传
-
 const imageUploader = multer({
   fileFilter,
   storage,
@@ -131,7 +130,7 @@ router.post('/upload', imageUploader, upload.uploadFiles)
 let sitemapStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     // cb(null, 'www/wwwroot/www.youddian.com/youddian_web')
-    cb(null, `/root/huahan/huahan_web/huahan_web_nuxt`)
+    cb(null, `/root/huahan/huahan_web/huahan_web_nuxt/static`)
     // cb(null, `./root`)
   },
   filename: function (req, file, cb) {
@@ -143,7 +142,7 @@ let sitemapUploader = multer({
   limits: { fileSize: 104857600, files: 1 },
   fileFilter(req, file, cb) {
     console.log('shdahdakhdkadsdsadsadasdsadasdas', file)
-    if (file.mimetype !== 'text/xml' && file.originalname !== 'sitemap.xml') {
+    if (file.mimetype !== 'text/xml' || file.mimetype !== 'text/txt') {
       cb(null, false)
     } else {
       cb(null, true)
