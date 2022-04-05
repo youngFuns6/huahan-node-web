@@ -142,7 +142,7 @@ let sitemapUploader = multer({
   limits: { fileSize: 104857600, files: 1 },
   fileFilter(req, file, cb) {
     console.log('shdahdakhdkadsdsadsadasdsadasdas', file)
-    if (file.mimetype !== 'text/xml' || file.mimetype !== 'text/txt') {
+    if (file.mimetype !== 'text/xml' || file.mimetype !== 'text/plain') {
       cb(null, false)
     } else {
       cb(null, true)
